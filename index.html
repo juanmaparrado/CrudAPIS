@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Tabla de población mundial</title>
-  <style>
-    table {
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    th, td {
-      padding: 8px;
-      border: 1px solid black;
-      text-align: center;
-    }
-    th {
-      background-color: lightgray;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Tabla de población mundial</title>
+    <style>
+        table{
+            border-spacing: 20px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Tabla de población mundial</h1>
-  <div id="table-container"></div>
-
-  <script src="./script.js"></script>
+    <button id="generate-btn">Generar datos</button>
+    <button id="show-btn">Mostrar datos</button>
+    <button id="borrar-datos">Borrar datos</button>
+    <table id="data-container">
+        <tr>
+            <th>País</th>
+            <th>Población 1970</th>
+            <th>Población 2022</th>
+            <th>Área (km²)</th>
+        </tr>
+    </table>
+<script src="./js/script.js"></script>
 </body>
 </html>
 
