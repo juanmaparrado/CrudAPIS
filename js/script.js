@@ -13,12 +13,27 @@ let data = null;
 document.getElementById('generate-btn').addEventListener('click', () => {
   Promise.all(requests)
     .then(responses => Promise.all(responses.map(response => response.json())))
-    .then(responses => {
-      data = responses;
-      console.log('Los datos se han generado.');
-      console.log(data);
-    })
+    .then(data => {
+      data.forEach(({ Country, '1970 Population':Population1970, '2022 Population': Population2022, 'Area (km²)':Area }) => {
+        datos.push({ country: Country, population1970: Population1970, population2022: Population2022, area: Area });
+      });
+      console.log("GENERANDO LOS DATOS DESDE LA API");
+      console.log(datos);
+  })
     .catch(err => console.error(err));
 });
 
-const dataContainer = document.getElementById('data-container');
+function llamadaAjax(url, datos, metodo) {
+  return $.ajax({
+      url: url, 
+      data: datos, 
+      type: metodo,
+      dataType: "json"
+  });
+}
+
+
+document.getElementById('save-btn').addEventListener('click', () => {
+  let peticionAjax = llamadaAjax('./php/guardar.php', datos, 'POST'); 
+    console.log("LLAMADA REalizadA");
+});

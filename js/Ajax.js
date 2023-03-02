@@ -7,4 +7,4 @@ function llamadaAjax(url, datos, metodo) {
         type: metodo,
         dataType: "json"
     });
-}
+  }
