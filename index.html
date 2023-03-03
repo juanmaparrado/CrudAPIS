@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CRUD población mundial</title>
+    <title>WORLD POPULATION</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./style/style.css">
+    <script defer src="./js/script.js"></script>
 </head>
 <body>
-    <button id="generate-btn">GENERATE</button>
-    <button id="save-btn">SAVE DATA</button>
-    <button id="delete-btn">DELETE ALL</button>
-    <button id="show-btn">SHOW ALL</button>
-    <button id="showorder-btn">SHOW ORDER BY AREA</button>
-    <button id="chart-btn">CHART</button>
-    <button id="chartorder-btn">CHART ORDER BY 2022 POPULATION</button>
+    <div class="button-container">
+        <h1>WORLD POPULATION</h1>
+        <button id="generate-btn" class="btn-blue">GENERATE</button>
+        <button id="save-btn">SAVE DATA</button>
+        <button id="delete-btn">DELETE ALL</button>
+        <button id="show-btn" class="btn-blue">SHOW ALL</button>
+        <button id="showorder-btn" class="btn-blue">SHOW ORDER</button>
+        <button id="chart-btn" class="btn-blue">CHART</button>
+        <button id="chartorder-btn" class="btn-blue">CHART ORDER </button>
+    </div>
     <div id="output"></div>
     <canvas id="myChart"></canvas>
-<script src="./js/script.js"></script>
 </body>
 </html>
 

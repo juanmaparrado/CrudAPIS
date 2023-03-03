@@ -1,0 +1,61 @@
+.button-container{
+    display: grid;
+    place-items: center;
+}
+.btn-blue {
+    font-size: 17px;
+    padding: 0.5em 2em;
+    border: 1px solid white;
+    box-shadow: 2px 2px 4px #00000066;
+    background: #1e90ff;
+    color: black;
+    width: 250px;
+    border-radius: 4px;
+}
+
+#save-btn {
+    font-size: 17px;
+    padding: 0.5em 2em;
+    border: 1px solid white;
+    box-shadow: 2px 2px 4px #00000066;
+    background: #1df14b;
+    color: black;
+    width: 250px;
+    border-radius: 4px;
+}
+
+#delete-btn {
+    font-size: 17px;
+    padding: 0.5em 2em;
+    border: 1px solid white;
+    box-shadow: 2px 2px 4px #00000066;
+    background: #f11e1e;
+    color: white;
+    width: 250px;
+    border-radius: 4px;
+}
+   
+button:hover {
+    background: #020024;
+    background: linear-gradient(90deg, #1e90ff 0%, #00d4ff)
+}
+   
+button:active {
+    transform: translate(0em, 0.2em);
+}
+#output{
+    margin-top: 2%;
+    display: grid;
+    place-items: center;
+}
+
+table{
+    border-collapse: collapse ;
+    border: 1px solid #1e90ff;
+}
+
+tr,td {
+    font-size: 18px;
+    border: 1px solid #1e90ff;
+}
+
