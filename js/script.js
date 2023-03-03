@@ -97,20 +97,18 @@ document.getElementById('show-btn').addEventListener("click", () => {
     })
     .catch(error => console.error(error));
 });
+
 /************          MOSTRAR PAGINADO     ***********************/
+var currentPage = 1; // página actual
+var recordsPerPage = 10; // cantidad de registros por página
+
 document.getElementById('showpag-btn').addEventListener("click", () => {
-  llamadaAjax('./php/mostrarPaginacion.php', null, 'GET')
+  llamadaAjax('./php/mostrar.php', null, 'GET')
     .then(response => {
-      console.log(response);
-      console.log("MOSTRANDO DATOS")
+      console.log("-------MOSTRANDO DATOS--------")
       var outputDiv = document.getElementById("output");
       outputDiv.innerHTML="";
-      
-      // Variables para paginación
-      var page = 1;
-      var recordsPerPage = 10;
-      var totalPages = Math.ceil(response.length / recordsPerPage);
-      
+      // Crear una tabla HTML
       var table = document.createElement("table");
       
       // Agregar las etiquetas thead y tbody a la tabla
@@ -132,49 +130,55 @@ document.getElementById('showpag-btn').addEventListener("click", () => {
       headerCell4.textContent = "Area";
       headerRow.appendChild(headerCell4);
       
-      // Función para agregar las filas de datos
-      function addDataRows(start, end) {
-        for (var i = start; i < end; i++) {
-          var dataRow = tableBody.insertRow();
-          var dataCell1 = dataRow.insertCell();
-          dataCell1.textContent = response[i].country;
-          var dataCell2 = dataRow.insertCell();
-          dataCell2.textContent = response[i].population1970;
-          var dataCell3 = dataRow.insertCell();
-          dataCell3.textContent = response[i].population2022;
-          var dataCell4 = dataRow.insertCell();
-          dataCell4.textContent = response[i].area;
-        }
+      // Calcular los índices de inicio y fin de los registros a mostrar
+      var startIndex = (currentPage - 1) * recordsPerPage;
+      var endIndex = startIndex + recordsPerPage;
+      
+      // Recorrer los datos del objeto JSON y agregar las filas de datos correspondientes a la página actual
+      for (var i = startIndex; i < endIndex && i < response.length; i++) {
+        var dataRow = tableBody.insertRow();
+        var dataCell1 = dataRow.insertCell();
+        dataCell1.textContent = response[i].country;
+        var dataCell2 = dataRow.insertCell();
+        dataCell2.textContent = response[i].population1970;
+        var dataCell3 = dataRow.insertCell();
+        dataCell3.textContent = response[i].population2022;
+        var dataCell4 = dataRow.insertCell();
+        dataCell4.textContent = response[i].area;
       }
-      
-      // Agregar las filas de datos para la primera página
-      addDataRows(0, recordsPerPage);
-      
-      // Función para cambiar de página
-      function goToPage(page) {
-        tableBody.innerHTML = ""; // Vaciar el tbody de la tabla
-        var start = (page - 1) * recordsPerPage;
-        var end = start + recordsPerPage;
-        addDataRows(start, end);
-      }
-      
-      // Crear los botones de paginación
-      var paginationDiv = document.createElement("div");
-      for (var i = 1; i <= totalPages; i++) {
-        var pageButton = document.createElement("button");
-        pageButton.textContent = i;
-        pageButton.addEventListener("click", () => {
-          page = parseInt(this.textContent);
-          goToPage(page);
-        });
-        paginationDiv.appendChild(pageButton);
-      }
-      
-      // Agregar la tabla y los botones de paginación al div de salida
+
       outputDiv.appendChild(table);
-      outputDiv.appendChild(paginationDiv);
     })
     .catch(error => console.error(error));
+});
+
+var prevButton = document.getElementById("prev-btn");
+var nextButton = document.getElementById("next-btn");
+var firstButton = document.getElementById("first-btn");
+var lastButton = document.getElementById("last-btn");
+
+prevButton.addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    document.getElementById("showpag-btn").click(); // volver a llamar a la función que muestra los registros
+  }
+});
+
+nextButton.addEventListener("click", () => {
+  if (currentPage < Math.ceil(response.length / recordsPerPage)) {
+    currentPage++;
+    document.getElementById("showpag-btn").click(); // volver a llamar a la función que muestra los registros
+  }
+});
+
+firstButton.addEventListener("click", () => {
+  currentPage = 1;
+  document.getElementById("showpag-btn").click(); // volver a llamar a la función que muestra los registros
+});
+
+lastButton.addEventListener("click", () => {
+  currentPage = Math.ceil(response.length / recordsPerPage);
+  document.getElementById("showpag-btn").click(); // volver a llamar a la función que muestra los registros
 });
 
 
