@@ -9,6 +9,7 @@ const countries = ['FRA', 'ITA', 'ESP','POL','UKR','ALB','AND', 'AUT','BLR','BEL
 const requests = countries.map(country => fetch(`https://world-population3.p.rapidapi.com/${country}`, options));
 let datos = [];
 let data = null;
+var myChart;
 
 //LLAMADA AJAX
 function llamadaAjax(url, datos, metodo) {
@@ -142,16 +143,21 @@ document.getElementById('chart-btn').addEventListener("click", () => {
       var countries = [];
       var population1970 = [];
       var population2022 = [];
+      var area = [];
 
       for (var i = 0; i < response.length; i++) {
           countries.push(response[i].country);
           population1970.push(response[i].population1970);
           population2022.push(response[i].population2022);
+          area.push(response[i].area);
       }
 
       if (response.length === 0) {
         console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
         return;
+      }
+      if (myChart) {
+        myChart.destroy();
       }
 
       var chartData = {
@@ -182,7 +188,7 @@ document.getElementById('chart-btn').addEventListener("click", () => {
         ]
       };
       var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
+      myChart = new Chart(ctx, {
         type: "bar",
         data: chartData,
         options: {
@@ -195,3 +201,67 @@ document.getElementById('chart-btn').addEventListener("click", () => {
       });
     })
   });
+
+  document.getElementById('chartorder-btn').addEventListener("click", () => {
+    llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
+      .then(response => {
+        var countries = [];
+        var population1970 = [];
+        var population2022 = [];
+  
+        for (var i = 0; i < response.length; i++) {
+            countries.push(response[i].country);
+            population1970.push(response[i].population1970);
+            population2022.push(response[i].population2022);
+        }
+  
+        if (response.length === 0) {
+          console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
+          return;
+        } 
+        
+        if (myChart) {
+          myChart.destroy();
+        }
+        
+        var chartData = {
+          labels: countries,
+          datasets: [
+            {
+              label: "Población en 1970",
+              data: population1970,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1
+            },
+            {
+              label: "Población en 2022",
+              data: population2022,
+              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1
+            },
+          {
+            label: "Diferencia de población",
+            data: population2022.map((val, index) => {
+              return val - population1970[index];}),
+            backgroundColor: "rgba(255, 206, 86, 0.2)",
+            borderColor: "rgba(255, 206, 86, 1)",
+            borderWidth: 1
+          }
+          ]
+        };
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+          type: "bar",
+          data: chartData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      })
+    });
