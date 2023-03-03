@@ -97,8 +97,88 @@ document.getElementById('show-btn').addEventListener("click", () => {
     })
     .catch(error => console.error(error));
 });
+/************          MOSTRAR PAGINADO     ***********************/
+document.getElementById('showpag-btn').addEventListener("click", () => {
+  llamadaAjax('./php/mostrarPaginacion.php', null, 'GET')
+    .then(response => {
+      console.log(response);
+      console.log("MOSTRANDO DATOS")
+      var outputDiv = document.getElementById("output");
+      outputDiv.innerHTML="";
+      
+      // Variables para paginación
+      var page = 1;
+      var recordsPerPage = 10;
+      var totalPages = Math.ceil(response.length / recordsPerPage);
+      
+      var table = document.createElement("table");
+      
+      // Agregar las etiquetas thead y tbody a la tabla
+      var tableHead = table.createTHead();
+      var tableBody = table.createTBody();
+      
+      // Crear las filas de encabezado de la tabla
+      var headerRow = tableHead.insertRow();
+      var headerCell1 = document.createElement("th");
+      headerCell1.textContent = "Country";
+      headerRow.appendChild(headerCell1);
+      var headerCell2 = document.createElement("th");
+      headerCell2.textContent = "Population1970";
+      headerRow.appendChild(headerCell2);
+      var headerCell3 = document.createElement("th");
+      headerCell3.textContent = "Population2022";
+      headerRow.appendChild(headerCell3);
+      var headerCell4 = document.createElement("th");
+      headerCell4.textContent = "Area";
+      headerRow.appendChild(headerCell4);
+      
+      // Función para agregar las filas de datos
+      function addDataRows(start, end) {
+        for (var i = start; i < end; i++) {
+          var dataRow = tableBody.insertRow();
+          var dataCell1 = dataRow.insertCell();
+          dataCell1.textContent = response[i].country;
+          var dataCell2 = dataRow.insertCell();
+          dataCell2.textContent = response[i].population1970;
+          var dataCell3 = dataRow.insertCell();
+          dataCell3.textContent = response[i].population2022;
+          var dataCell4 = dataRow.insertCell();
+          dataCell4.textContent = response[i].area;
+        }
+      }
+      
+      // Agregar las filas de datos para la primera página
+      addDataRows(0, recordsPerPage);
+      
+      // Función para cambiar de página
+      function goToPage(page) {
+        tableBody.innerHTML = ""; // Vaciar el tbody de la tabla
+        var start = (page - 1) * recordsPerPage;
+        var end = start + recordsPerPage;
+        addDataRows(start, end);
+      }
+      
+      // Crear los botones de paginación
+      var paginationDiv = document.createElement("div");
+      for (var i = 1; i <= totalPages; i++) {
+        var pageButton = document.createElement("button");
+        pageButton.textContent = i;
+        pageButton.addEventListener("click", () => {
+          page = parseInt(this.textContent);
+          goToPage(page);
+        });
+        paginationDiv.appendChild(pageButton);
+      }
+      
+      // Agregar la tabla y los botones de paginación al div de salida
+      outputDiv.appendChild(table);
+      outputDiv.appendChild(paginationDiv);
+    })
+    .catch(error => console.error(error));
+});
 
-//************          MOSTRAR ORDENADO     **********************/
+
+/************          MOSTRAR ORDENADO     **********************/
 
 document.getElementById('showorder-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
