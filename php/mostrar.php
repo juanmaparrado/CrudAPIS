@@ -2,7 +2,7 @@
 define("HOSTNAME", "localhost");
 define("USERNAME", "root");
 define("PASSWORD", "root");
-define("DATABASE", "valores");
+define("DATABASE", "valores");//utf8mb4_spanish_ci
 
 $conexion = new mysqli(HOSTNAME,USERNAME,PASSWORD,DATABASE);
 if ($conexion->connect_error) {
