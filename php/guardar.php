@@ -1,31 +1,25 @@
 <?php
-
 define("HOSTNAME", "localhost");
 define("USERNAME", "root");
 define("PASSWORD", "root");
-define("DATABASE", "valores"); 
-  // Recuperamos los datos enviados por la llamada AJAX
-  $datos = $_POST['datos'];
-/*  $conexion = mysqli_connect(HOSTNAME, USERNAME, PASSWORD, DATABASE);
-  if (!$conexion) {
-    die('Error de conexión: ' . mysqli_connect_error());
-  }
+define("DATABASE", "valores");
 
-  // Creamos la consulta SQL para insertar los datos en la base de datos
-  $consulta = "INSERT INTO tabla_datos (country, population1970, population2020,area) VALUES ";
-  foreach ($datos as $dato) {
-    $consulta .= "('{$dato['country']}', '{$dato['population1970']}', '{$dato['population2022']},'{$dato['area']}'),";
-  }
-  $consulta = rtrim($consulta, ',');
+// Obtener los datos enviados por POST
+$json_data = file_get_contents('php://input');
 
-  // Ejecutamos la consulta SQL
-  if (mysqli_query($conexion, $consulta)) {
-    echo "Los datos se han guardado correctamente";
-  } else {
-    echo "Error al guardar los datos: " . mysqli_error($conexion);
-  }
+// Decodificar los datos JSON en un array de objetos
+$data = json_decode($json_data);
+$db = new mysqli(HOSTNAME,USERNAME,PASSWORD,DATABASE);
+// Recorrer los objetos e insertarlos en la base de datos
+foreach ($data as $obj) {
+  $country = $obj->country;
+  $population1970 = $obj->population1970;
+  $population2022 = $obj->population2022;
+  $area = $obj->area;
+  
 
-  // Cerramos la conexión a la base de datos
-  mysqli_close($conexion);
-*/
-?>
+  // Ejecutar la consulta de inserción en la base de datos
+  $query = "INSERT INTO tabla_datos (country, population1970, population2022, area) VALUES ('$country', $population1970, $population2022, $area)";
+  $db->query($query);
+}
+mysqli_close($conexion);

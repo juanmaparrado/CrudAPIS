@@ -5,7 +5,6 @@ const options = {
     'X-RapidAPI-Host': 'world-population3.p.rapidapi.com'
   }
 };
-
 const countries = ['FRA', 'ITA', 'ESP','POL','UKR'];
 const requests = countries.map(country => fetch(`https://world-population3.p.rapidapi.com/${country}`, options));
 let datos = [];
@@ -19,10 +18,10 @@ document.getElementById('generate-btn').addEventListener('click', () => {
       });
       console.log("GENERANDO LOS DATOS DESDE LA API");
       console.log(datos);
+      console.log(JSON.stringify(datos));
   })
     .catch(err => console.error(err));
 });
-
 function llamadaAjax(url, datos, metodo) {
   return $.ajax({
       url: url, 
@@ -31,9 +30,7 @@ function llamadaAjax(url, datos, metodo) {
       dataType: "json"
   });
 }
-
-
 document.getElementById('save-btn').addEventListener('click', () => {
-  let peticionAjax = llamadaAjax('./php/guardar.php', datos, 'POST'); 
+  let peticionAjax = llamadaAjax('./php/guardar.php', JSON.stringify(datos), 'POST'); 
     console.log("LLAMADA REalizadA");
 });
