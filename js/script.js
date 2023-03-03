@@ -55,8 +55,7 @@ document.getElementById('delete-btn').addEventListener("click", () => {
 document.getElementById('show-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrar.php', null, 'GET')
     .then(response => {
-      console.log(response);
-      console.log("MOSTRANDO DATOS")
+      console.log("-------MOSTRANDO DATOS--------")
       var outputDiv = document.getElementById("output");
       outputDiv.innerHTML="";
       // Crear una tabla HTML
