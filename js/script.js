@@ -5,7 +5,7 @@ const options = {
     'X-RapidAPI-Host': 'world-population3.p.rapidapi.com'
   }
 };
-const countries = ['FRA', 'ITA', 'ESP','POL','UKR','ALB','AND', 'AUT','BLR','BEL','HRV','CZE','DEU', 'NLD', 'CHE', 'SWE', 'NOR', 'FIN', 'DNK', 'ISL','DZA','AGO','CMR','CAF','COD','GNQ','GHA','GIN','CIV','KEN','MDG','AUS','PNG','NZL','FJI','FJI','VAT','GBR','ROU','ZWE'];
+const countries = ['FRA', 'ITA', 'ESP','POL','UKR','ALB','AND', 'AUT','BLR','BEL','HRV','CZE','DEU', 'NLD', 'CHE', 'SWE', 'NOR', 'FIN', 'DNK', 'ISL','DZA','AGO','CMR','CAF','COD','GNQ','GHA','GIN','CIV','KEN','MDG','AUS','PNG','NZL','FJI','FJI','RUS','GBR','ROU','ZWE'];
 const requests = countries.map(country => fetch(`https://world-population3.p.rapidapi.com/${country}`, options));
 let datos = [];
 let data = null;
@@ -96,13 +96,16 @@ document.getElementById('chart-btn').addEventListener("click", () => {
       var countries = [];
       var population1970 = [];
       var population2022 = [];
-      var area = [];
 
       for (var i = 0; i < response.length; i++) {
           countries.push(response[i].country);
           population1970.push(response[i].population1970);
           population2022.push(response[i].population2022);
-          area.push(response[i].area);
+      }
+
+      if (response.length === 0) {
+        console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
+        return;
       }
 
       var chartData = {
@@ -122,13 +125,14 @@ document.getElementById('chart-btn').addEventListener("click", () => {
             borderColor: "rgba(54, 162, 235, 1)",
             borderWidth: 1
           },
-          {
-            label: "Área",
-            data: area,
-            backgroundColor: "rgba(255, 206, 86, 0.2)",
-            borderColor: "rgba(255, 206, 86, 1)",
-            borderWidth: 1
-          }
+        {
+          label: "Diferencia de población",
+          data: population2022.map((val, index) => {
+            return val - population1970[index];}),
+          backgroundColor: "rgba(255, 206, 86, 0.2)",
+          borderColor: "rgba(255, 206, 86, 1)",
+          borderWidth: 1
+        }
         ]
       };
       var ctx = document.getElementById('myChart').getContext('2d');
