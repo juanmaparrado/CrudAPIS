@@ -89,3 +89,59 @@ document.getElementById('show-btn').addEventListener("click", () => {
     })
     .catch(error => console.error(error));
 });
+
+document.getElementById('chart-btn').addEventListener("click", () => {
+  llamadaAjax('./php/mostrar.php', null, 'GET')
+    .then(response => {
+      var countries = [];
+      var population1970 = [];
+      var population2022 = [];
+      var area = [];
+
+      for (var i = 0; i < response.length; i++) {
+          countries.push(response[i].country);
+          population1970.push(response[i].population1970);
+          population2022.push(response[i].population2022);
+          area.push(response[i].area);
+      }
+
+      var chartData = {
+        labels: countries,
+        datasets: [
+          {
+            label: "Población en 1970",
+            data: population1970,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 1
+          },
+          {
+            label: "Población en 2022",
+            data: population2022,
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgba(54, 162, 235, 1)",
+            borderWidth: 1
+          },
+          {
+            label: "Área",
+            data: area,
+            backgroundColor: "rgba(255, 206, 86, 0.2)",
+            borderColor: "rgba(255, 206, 86, 1)",
+            borderWidth: 1
+          }
+        ]
+      };
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: "bar",
+        data: chartData,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    })
+  });
