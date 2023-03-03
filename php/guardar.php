@@ -6,15 +6,6 @@ define("PASSWORD", "root");
 define("DATABASE", "valores"); 
   // Recuperamos los datos enviados por la llamada AJAX
   $datos = $_POST['datos'];
-  $datos_obj = json_decode($datos); // Decodificar el valor JSON en un objeto PHP
-  foreach ($datos_obj as $objeto) { // Iterar sobre cada objeto en el array 'datos'
-    $country = $objeto->country;
-    $population1970 = $objeto->population1970;
-    $population2022 = $objeto->population2022;
-    $area = $objeto->area;
-    // Realizar las acciones necesarias con los valores obtenidos de cada objeto
-  }
-
 /*  $conexion = mysqli_connect(HOSTNAME, USERNAME, PASSWORD, DATABASE);
   if (!$conexion) {
     die('Error de conexión: ' . mysqli_connect_error());
