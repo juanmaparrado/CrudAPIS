@@ -89,6 +89,52 @@ document.getElementById('show-btn').addEventListener("click", () => {
     })
     .catch(error => console.error(error));
 });
+document.getElementById('showorder-btn').addEventListener("click", () => {
+  llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
+    .then(response => {
+      console.log(response);
+      console.log("MOSTRANDO DATOS")
+      var outputDiv = document.getElementById("output");
+      outputDiv.innerHTML="";
+      // Crear una tabla HTML
+      var table = document.createElement("table");
+      
+      // Agregar las etiquetas thead y tbody a la tabla
+      var tableHead = table.createTHead();
+      var tableBody = table.createTBody();
+      
+      // Crear las filas de encabezado de la tabla
+      var headerRow = tableHead.insertRow();
+      var headerCell1 = document.createElement("th");
+      headerCell1.textContent = "Country";
+      headerRow.appendChild(headerCell1);
+      var headerCell2 = document.createElement("th");
+      headerCell2.textContent = "Population1970";
+      headerRow.appendChild(headerCell2);
+      var headerCell3 = document.createElement("th");
+      headerCell3.textContent = "Population2022";
+      headerRow.appendChild(headerCell3);
+      var headerCell4 = document.createElement("th");
+      headerCell4.textContent = "Area";
+      headerRow.appendChild(headerCell4);
+      
+      // Recorrer los datos del objeto JSON y agregar las filas de datos
+      for (var i = 0; i < response.length; i++) {
+        var dataRow = tableBody.insertRow();
+        var dataCell1 = dataRow.insertCell();
+        dataCell1.textContent = response[i].country;
+        var dataCell2 = dataRow.insertCell();
+        dataCell2.textContent = response[i].population1970;
+        var dataCell3 = dataRow.insertCell();
+        dataCell3.textContent = response[i].population2022;
+        var dataCell4 = dataRow.insertCell();
+        dataCell4.textContent = response[i].area;
+      }
+
+      outputDiv.appendChild(table);
+    })
+    .catch(error => console.error(error));
+});
 
 document.getElementById('chart-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrar.php', null, 'GET')

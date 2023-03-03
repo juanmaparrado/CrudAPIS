@@ -9,7 +9,7 @@ if ($conexion->connect_error) {
     die("Error al conectar a la base de datos: " . $conn->connect_error);
   }
 
-$query ="SELECT  `country`, `population1970`, `population2022`, `area` FROM `tabla_datos`";
+$query ="SELECT `country`, `population1970`, `population2022`, `area` FROM `tabla_datos` ORDER BY area DESC";
 $result=mysqli_query($conexion,$query) or die(mysqli_error($conexion));
 
 $datos = [];

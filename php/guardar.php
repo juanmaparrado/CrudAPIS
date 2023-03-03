@@ -2,7 +2,7 @@
 define("HOSTNAME", "localhost");
 define("USERNAME", "root");
 define("PASSWORD", "root");
-define("DATABASE", "valores");//utf8mb4_spanish_ci
+define("DATABASE", "datos");//utf8mb4_spanish_ci
 
 // Obtener los datos enviados por POST
 $json_data = file_get_contents('php://input');
