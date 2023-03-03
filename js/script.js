@@ -22,7 +22,7 @@ function llamadaAjax(url, datos, metodo) {
   });
 }
 
-//************          GENERAR             **********************/
+//************          GENERAR             ********************************************************************************************************/
 
 document.getElementById('generate-btn').addEventListener('click', () => {
   Promise.all(requests)
@@ -36,7 +36,7 @@ document.getElementById('generate-btn').addEventListener('click', () => {
     .catch(err => console.error(err));
 });
 
-//************          GUARDAR             **********************/
+//************          GUARDAR             *******************************************************************************************************/
 
 document.getElementById('save-btn').addEventListener('click', () => {
   let peticionAjax = llamadaAjax('./php/guardar.php', JSON.stringify(datos), 'POST'); 
@@ -44,19 +44,16 @@ document.getElementById('save-btn').addEventListener('click', () => {
 
 });
 
-//************          BORRAR             **********************/
+//************          BORRAR             *********************************************************************************************************/
 
 document.getElementById('delete-btn').addEventListener("click", () => {
   let peticionAjax = llamadaAjax('./php/borrar.php', JSON.stringify(datos), 'POST');
   console.log("---------DATOS ELIMINADOS---------");
 });
-//************          MOSTRAR             **********************/
+//************          MOSTRAR             *******************************************************************************************************/
 
-document.getElementById('show-btn').addEventListener("click", () => {
-  llamadaAjax('./php/mostrar.php', null, 'GET')
-    .then(response => {
-      console.log("-------MOSTRANDO DATOS--------")
-      var outputDiv = document.getElementById("output");
+function mostrarDatos(response){
+  var outputDiv = document.getElementById("output");
       outputDiv.innerHTML="";
       // Crear una tabla HTML
       var table = document.createElement("table");
@@ -94,122 +91,108 @@ document.getElementById('show-btn').addEventListener("click", () => {
       }
 
       outputDiv.appendChild(table);
+}
+
+document.getElementById('show-btn').addEventListener("click", () => {
+  llamadaAjax('./php/mostrar.php', null, 'GET')
+    .then(response => {
+      console.log("-------MOSTRANDO DATOS--------")
+      mostrarDatos(response);
     })
     .catch(error => console.error(error));
 });
 
-/************          MOSTRAR ORDENADO     **********************/
+
+//************          MOSTRAR    PAGINACION         **********************************************************************************/
+
+document.getElementById('showpag-btn').addEventListener("click", () => {
+  llamadaAjax('./php/mostrarPagination.php', null, 'GET')
+  .then(response => {
+    console.log("-------MOSTRANDO DATOS--------");
+    mostrarDatos(response);
+
+  })
+  .catch(error => console.error(error));
+});
+/************          MOSTRAR ORDENADO     **************************************************************************************************/
 
 document.getElementById('showorder-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
     .then(response => {
       console.log(response);
       console.log("MOSTRANDO DATOS")
-      var outputDiv = document.getElementById("output");
-      outputDiv.innerHTML="";
-      // Crear una tabla HTML
-      var table = document.createElement("table");
-      
-      // Agregar las etiquetas thead y tbody a la tabla
-      var tableHead = table.createTHead();
-      var tableBody = table.createTBody();
-      
-      // Crear las filas de encabezado de la tabla
-      var headerRow = tableHead.insertRow();
-      var headerCell1 = document.createElement("th");
-      headerCell1.textContent = "Country";
-      headerRow.appendChild(headerCell1);
-      var headerCell2 = document.createElement("th");
-      headerCell2.textContent = "Population1970";
-      headerRow.appendChild(headerCell2);
-      var headerCell3 = document.createElement("th");
-      headerCell3.textContent = "Population2022";
-      headerRow.appendChild(headerCell3);
-      var headerCell4 = document.createElement("th");
-      headerCell4.textContent = "Area";
-      headerRow.appendChild(headerCell4);
-      
-      // Recorrer los datos del objeto JSON y agregar las filas de datos
-      for (var i = 0; i < response.length; i++) {
-        var dataRow = tableBody.insertRow();
-        var dataCell1 = dataRow.insertCell();
-        dataCell1.textContent = response[i].country;
-        var dataCell2 = dataRow.insertCell();
-        dataCell2.textContent = response[i].population1970;
-        var dataCell3 = dataRow.insertCell();
-        dataCell3.textContent = response[i].population2022;
-        var dataCell4 = dataRow.insertCell();
-        dataCell4.textContent = response[i].area;
-      }
-
-      outputDiv.appendChild(table);
+      mostrarDatos(response);
     })
     .catch(error => console.error(error));
 });
 
-//************          GRAFICO             **********************/
+//************          GRAFICO             ********************************************************************************************/
+function generarGrafico(response) {
+  var countries = [];
+  var population1970 = [];
+  var population2022 = [];
+  var area = [];
+
+  for (var i = 0; i < response.length; i++) {
+      countries.push(response[i].country);
+      population1970.push(response[i].population1970);
+      population2022.push(response[i].population2022);
+      area.push(response[i].area);
+  }
+
+  if (response.length === 0) {
+    console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
+    return;
+  }
+  var chartData = {
+    labels: countries,
+    datasets: [
+      {
+        label: "Población en 1970",
+        data: population1970,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1
+      },
+      {
+        label: "Población en 2022",
+        data: population2022,
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1
+      },
+    {
+      label: "Diferencia de población",
+      data: population2022.map((val, index) => {
+        return val - population1970[index];}),
+      backgroundColor: "rgba(255, 206, 86, 0.2)",
+      borderColor: "rgba(255, 206, 86, 1)",
+      borderWidth: 1
+    }
+    ]
+  };
+  var ctx = document.getElementById('myChart').getContext('2d');
+  myChart = new Chart(ctx, {
+    type: "bar",
+    data: chartData,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
 document.getElementById('chart-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrar.php', null, 'GET')
     .then(response => {
-      var countries = [];
-      var population1970 = [];
-      var population2022 = [];
-      var area = [];
-
-      for (var i = 0; i < response.length; i++) {
-          countries.push(response[i].country);
-          population1970.push(response[i].population1970);
-          population2022.push(response[i].population2022);
-          area.push(response[i].area);
-      }
-
-      if (response.length === 0) {
-        console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
-        return;
-      }
-      var chartData = {
-        labels: countries,
-        datasets: [
-          {
-            label: "Población en 1970",
-            data: population1970,
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgba(255, 99, 132, 1)",
-            borderWidth: 1
-          },
-          {
-            label: "Población en 2022",
-            data: population2022,
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgba(54, 162, 235, 1)",
-            borderWidth: 1
-          },
-        {
-          label: "Diferencia de población",
-          data: population2022.map((val, index) => {
-            return val - population1970[index];}),
-          backgroundColor: "rgba(255, 206, 86, 0.2)",
-          borderColor: "rgba(255, 206, 86, 1)",
-          borderWidth: 1
-        }
-        ]
-      };
-      var ctx = document.getElementById('myChart').getContext('2d');
-      myChart = new Chart(ctx, {
-        type: "bar",
-        data: chartData,
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
+      generarGrafico(response);
     })
   });
 
-  //************          CHART ORDENADO      **********************/
+  //************          CHART ORDENADO      **********************************************************************************************/
   document.getElementById('chartorder-btn').addEventListener("click", () => {
     //elimina el grafico ya existente
     if (myChart) {
@@ -217,59 +200,6 @@ document.getElementById('chart-btn').addEventListener("click", () => {
     }
     llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
       .then(response => {
-        var countries = [];
-        var population1970 = [];
-        var population2022 = [];
-  
-        for (var i = 0; i < response.length; i++) {
-            countries.push(response[i].country);
-            population1970.push(response[i].population1970);
-            population2022.push(response[i].population2022);
-        }
-  
-        if (response.length === 0) {
-          console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
-          return;
-        } 
-
-        var chartData = {
-          labels: countries,
-          datasets: [
-            {
-              label: "Población en 1970",
-              data: population1970,
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              borderColor: "rgba(255, 99, 132, 1)",
-              borderWidth: 1
-            },
-            {
-              label: "Población en 2022",
-              data: population2022,
-              backgroundColor: "rgba(54, 162, 235, 0.2)",
-              borderColor: "rgba(54, 162, 235, 1)",
-              borderWidth: 1
-            },
-          {
-            label: "Diferencia de población",
-            data: population2022.map((val, index) => {
-              return val - population1970[index];}),
-            backgroundColor: "rgba(255, 206, 86, 0.2)",
-            borderColor: "rgba(255, 206, 86, 1)",
-            borderWidth: 1
-          }
-          ]
-        };
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-          type: "bar",
-          data: chartData,
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true
-              }
-            }
-          }
-        });
+       generarGrafico(response);
       })
     });
