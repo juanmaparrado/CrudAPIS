@@ -22,4 +22,4 @@ foreach ($data as $obj) {
   $query = "INSERT INTO tabla_datos (country, population1970, population2022, area) VALUES ('$country', $population1970, $population2022, $area)";
   $db->query($query);
 }
-mysqli_close($conexion);
+mysqli_close($db);
