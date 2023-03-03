@@ -27,14 +27,14 @@ document.getElementById('generate-btn').addEventListener('click', () => {
       data.forEach(({ Country, '1970 Population':Population1970, '2022 Population': Population2022, 'Area (km²)':Area }) => {
         datos.push({ country: Country, population1970: Population1970, population2022: Population2022, area: Area });
       });
-      console.log("GENERANDO LOS DATOS DESDE LA API");
+      console.log("LOS DATOS DESDE LA API SE HAN GENERADO");
   })
     .catch(err => console.error(err));
 });
 
 document.getElementById('save-btn').addEventListener('click', () => {
   let peticionAjax = llamadaAjax('./php/guardar.php', JSON.stringify(datos), 'POST'); 
-  console.log("----------DATOS GRABADOS---------");
+  console.log("----------DATOS GUARDADOS---------");
 
 });
 
