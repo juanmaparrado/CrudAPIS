@@ -3,25 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Tabla de población mundial</title>
-    <style>
-        table{
-            border-spacing: 20px;
-        }
-    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <button id="generate-btn">Generar datos</button>
     <button id="save-btn">guardar datos</button>
     <button id="delete-btn">Borrar TODO</button>
-    <table id="data-container">
-        <tr>
-            <th>País</th>
-            <th>Población 1970</th>
-            <th>Población 2022</th>
-            <th>Área (km²)</th>
-        </tr>
-    </table>
+    <button id="show-btn">MOSTRAR TODO</button>
+    <div id="output"></div>
 <script src="./js/script.js"></script>
 </body>
 </html>
