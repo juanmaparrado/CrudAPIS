@@ -186,6 +186,10 @@ function generarGrafico(response) {
 }
 
 document.getElementById('chart-btn').addEventListener("click", () => {
+    //elimina el grafico ya existente
+    if (myChart) {
+      myChart.destroy();
+    }
   llamadaAjax('./php/mostrar.php', null, 'GET')
     .then(response => {
       generarGrafico(response);
