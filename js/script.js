@@ -12,6 +12,7 @@ let data = null;
 var myChart;
 
 //LLAMADA AJAX
+
 function llamadaAjax(url, datos, metodo) {
   return $.ajax({
       url: url, 
@@ -20,6 +21,8 @@ function llamadaAjax(url, datos, metodo) {
       dataType: "json"
   });
 }
+
+//************          GENERAR             **********************/
 
 document.getElementById('generate-btn').addEventListener('click', () => {
   Promise.all(requests)
@@ -33,16 +36,21 @@ document.getElementById('generate-btn').addEventListener('click', () => {
     .catch(err => console.error(err));
 });
 
+//************          GUARDAR             **********************/
+
 document.getElementById('save-btn').addEventListener('click', () => {
   let peticionAjax = llamadaAjax('./php/guardar.php', JSON.stringify(datos), 'POST'); 
   console.log("----------DATOS GUARDADOS---------");
 
 });
 
+//************          BORRAR             **********************/
+
 document.getElementById('delete-btn').addEventListener("click", () => {
   let peticionAjax = llamadaAjax('./php/borrar.php', JSON.stringify(datos), 'POST');
   console.log("---------DATOS ELIMINADOS---------");
 });
+//************          MOSTRAR             **********************/
 
 document.getElementById('show-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrar.php', null, 'GET')
@@ -90,6 +98,9 @@ document.getElementById('show-btn').addEventListener("click", () => {
     })
     .catch(error => console.error(error));
 });
+
+//************          MOSTRAR ORDENADO     **********************/
+
 document.getElementById('showorder-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
     .then(response => {
@@ -137,6 +148,7 @@ document.getElementById('showorder-btn').addEventListener("click", () => {
     .catch(error => console.error(error));
 });
 
+//************          GRAFICO             **********************/
 document.getElementById('chart-btn').addEventListener("click", () => {
   llamadaAjax('./php/mostrar.php', null, 'GET')
     .then(response => {
@@ -156,10 +168,6 @@ document.getElementById('chart-btn').addEventListener("click", () => {
         console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
         return;
       }
-      if (myChart) {
-        myChart.destroy();
-      }
-
       var chartData = {
         labels: countries,
         datasets: [
@@ -202,7 +210,12 @@ document.getElementById('chart-btn').addEventListener("click", () => {
     })
   });
 
+  //************          CHART ORDENADO      **********************/
   document.getElementById('chartorder-btn').addEventListener("click", () => {
+    //elimina el grafico ya existente
+    if (myChart) {
+      myChart.destroy();
+    }
     llamadaAjax('./php/mostrarOrdenado.php', null, 'GET')
       .then(response => {
         var countries = [];
@@ -219,11 +232,7 @@ document.getElementById('chart-btn').addEventListener("click", () => {
           console.log('*****NO SE PUEDE MOSTRAR EL GRAFICO*********');
           return;
         } 
-        
-        if (myChart) {
-          myChart.destroy();
-        }
-        
+
         var chartData = {
           labels: countries,
           datasets: [
